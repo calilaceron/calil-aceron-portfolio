@@ -1,8 +1,450 @@
-{% extends 'core/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calil Aceron — Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { font-family: 'Inter', sans-serif; text-wrap: pretty; }
+    html, body { margin: 0; padding: 0; background: #0a0a0a; }
 
-{% block title %}Calil Aceron — Portfolio{% endblock %}
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+    @keyframes blink  { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 
-{% block content %}
-<h1>Hello, I'm Calil Aceron</h1>
-<p>Welcome to my portfolio.</p>
-{% endblock %}
+    .au  { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+    .d1  { animation-delay: 0.08s; }
+    .d2  { animation-delay: 0.2s; }
+    .d3  { animation-delay: 0.33s; }
+    .d4  { animation-delay: 0.46s; }
+    .d5  { animation-delay: 0.59s; }
+    .cursor { animation: blink 1s step-end infinite; }
+
+    .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+
+    .p-card {
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .p-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 60px -16px rgba(59,130,246,0.22);
+      border-color: rgba(59,130,246,0.32);
+    }
+    .folder-ic { transition: stroke 0.3s ease; }
+    .p-card:hover .folder-ic { stroke: #3b82f6; }
+    .gh-link { color: #475569; text-decoration: none; display: flex; transition: color 0.2s; }
+    .gh-link:hover { color: #60a5fa; }
+
+    .pill {
+      font-size: 12px; font-weight: 500; padding: 6px 13px; border-radius: 9999px;
+      color: #93c5fd; background: rgba(30,58,138,0.32); border: 1px solid rgba(59,130,246,0.18);
+      transition: all 0.18s; cursor: default; user-select: none; line-height: 1;
+    }
+    .pill:hover { color: #bfdbfe; background: rgba(37,99,235,0.28); border-color: rgba(59,130,246,0.52); }
+
+    .s-tag {
+      color: #94a3b8; font-size: 11px; font-weight: 500;
+      padding: 4px 10px; border-radius: 6px; background: rgba(30,41,59,0.95);
+    }
+
+    .soc-btn {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500;
+      padding: 11px 18px; border-radius: 12px; text-decoration: none; transition: all 0.2s;
+      color: #64748b; background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.06);
+    }
+    .soc-btn:hover { color: white; background: rgba(30,41,59,0.95); border-color: rgba(255,255,255,0.13); transform: translateY(-2px); }
+
+    a.email-lnk { color: #60a5fa; text-decoration: none; display: inline-flex; align-items: center; gap: 11px; font-weight: 500; transition: color 0.2s; }
+    a.email-lnk:hover { color: #93c5fd; text-decoration: underline; text-underline-offset: 4px; }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #0a0a0a; }
+    ::-webkit-scrollbar-thumb { background: #1d4ed8; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-[#0a0a0a] text-white">
+  <div id="root"></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <script type="text/babel">{% verbatim %}
+    const { useState, useEffect, useRef } = React;
+
+    const SKILLS = {
+      Languages:             ['Python', 'Java', 'JavaScript', 'HTML / CSS', 'SQL'],
+      'Frameworks & Tools':  ['Django', 'React', 'Git', 'GitHub', 'Railway', 'Figma', 'Canva'],
+      Concepts:              ['OOP', 'REST APIs', 'Relational Databases', 'Design Patterns', 'UI/UX Design'],
+      'Soft Skills':         ['Teamwork', 'Collaboration', 'Critical Thinking', 'Communication', 'Problem-Solving', 'Adaptability'],
+    };
+
+    const PROJECTS = [
+      {
+        title:  'Learn2Dev Route-finder',
+        desc:   'Collaborated in a team to learn foundational web development and build an in-campus route-finder for Ateneo de Manila University.',
+        stack:  ['React', 'JavaScript', 'HTML', 'CSS'],
+        github: 'https://github.com/calilaceron',
+      },
+      {
+        title:  'CommonGrounds',
+        desc:   'Multi-app Django website with user authentication, role-based access controls, and session-based guest purchasing — focused on the merchandise store and auth pages.',
+        stack:  ['Django', 'Python', 'SQL'],
+        github: 'https://github.com/calilaceron',
+      },
+      {
+        title:  'Recipebook',
+        desc:   'A clean, functional recipe management web app built with Django — allowing users to create, browse, and manage their personal recipe collections.',
+        stack:  ['Django', 'Python', 'SQL'],
+        github: 'https://github.com/calilaceron',
+      },
+      {
+        title:  'Academic Climb',
+        desc:   'A 2D two-player Java multiplayer platformer with real-time networking, dynamic in-game elements, and graphics rendered using Java Swing.',
+        stack:  ['Java', 'Java Swing', 'Networking'],
+        github: 'https://github.com/calilaceron',
+      },
+      {
+        title:  'Basic Landing Page',
+        desc:   'A clean, responsive landing page dashboard built with semantic HTML and CSS Flexbox, focused on layout fundamentals and visual clarity.',
+        stack:  ['HTML', 'CSS', 'Flexbox'],
+        github: 'https://github.com/calilaceron',
+      },
+    ];
+
+    const GHIcon = ({ s = 20 }) => (
+      <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+      </svg>
+    );
+
+    const LIIcon = ({ s = 20 }) => (
+      <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+    );
+
+    const useTyper = (words, speed = 78, pause = 2400) => {
+      const [s, setS] = useState({ i: 0, c: 0, del: false });
+      useEffect(() => {
+        const w = words[s.i];
+        let t;
+        if      (!s.del && s.c < w.length)  t = setTimeout(() => setS(p => ({ ...p, c: p.c + 1 })), speed);
+        else if (!s.del && s.c === w.length) t = setTimeout(() => setS(p => ({ ...p, del: true })), pause);
+        else if (s.del && s.c > 0)           t = setTimeout(() => setS(p => ({ ...p, c: p.c - 1 })), speed / 2);
+        else                                  setS({ i: (s.i + 1) % words.length, c: 0, del: false });
+        return () => clearTimeout(t);
+      }, [s]);
+      return words[s.i].slice(0, s.c);
+    };
+
+    const Reveal = ({ children, delay = 0, className = '' }) => {
+      const ref = useRef();
+      useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const ob = new IntersectionObserver(
+          ([e]) => { if (e.isIntersecting) { el.classList.add('in'); ob.disconnect(); } },
+          { threshold: 0.07 }
+        );
+        ob.observe(el);
+        return () => ob.disconnect();
+      }, []);
+      return (
+        <div ref={ref} className={`reveal ${className}`} style={{ transitionDelay: `${delay}ms` }}>
+          {children}
+        </div>
+      );
+    };
+
+    const scrollTo = id => {
+      const el = document.getElementById(id);
+      if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
+    };
+
+    const SH = ({ label, title }) => (
+      <div className="mb-12">
+        <p className="text-blue-500 text-[11px] font-bold tracking-[0.22em] uppercase mb-2">{label}</p>
+        <h2 className="text-3xl md:text-[2.6rem] font-bold text-white" style={{ letterSpacing: '-0.025em' }}>{title}</h2>
+        <div className="mt-4 h-0.5 w-10 bg-blue-600 rounded-full"></div>
+      </div>
+    );
+
+    const Nav = () => {
+      const [sc, setSc] = useState(false);
+      const [open, setOpen] = useState(false);
+      useEffect(() => {
+        const fn = () => setSc(window.scrollY > 24);
+        window.addEventListener('scroll', fn, { passive: true });
+        return () => window.removeEventListener('scroll', fn);
+      }, []);
+      const links = ['About', 'Skills', 'Projects', 'Contact'];
+      return (
+        <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${sc ? 'bg-[#0a0a0a]/82 backdrop-blur-2xl border-b border-white/[0.06]' : ''}`}>
+          <div className="max-w-5xl mx-auto px-6 flex items-center justify-between h-[68px]">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="text-white font-bold text-lg bg-transparent border-0 cursor-pointer p-0 hover:opacity-70 transition-opacity"
+              style={{ letterSpacing: '-0.03em' }}>
+              <span className="text-blue-500">C</span>alil<span className="text-blue-500">.</span>
+            </button>
+            <nav className="hidden md:flex items-center gap-8">
+              {links.map(l => (
+                <button key={l} onClick={() => scrollTo(l.toLowerCase())}
+                  className="text-sm text-slate-400 hover:text-white font-medium transition-colors duration-200 bg-transparent border-0 cursor-pointer p-0">
+                  {l}
+                </button>
+              ))}
+            </nav>
+            <button
+              className="md:hidden text-slate-400 hover:text-white bg-transparent border-0 cursor-pointer p-1 -mr-1 transition-colors"
+              onClick={() => setOpen(o => !o)} aria-label="Toggle menu">
+              {open
+                ? <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>}
+            </button>
+          </div>
+          {open && (
+            <div className="md:hidden border-t border-white/[0.05] px-6 py-5 flex flex-col gap-5"
+              style={{ background: 'rgba(10,14,26,0.97)', backdropFilter: 'blur(24px)' }}>
+              {links.map(l => (
+                <button key={l} onClick={() => { scrollTo(l.toLowerCase()); setOpen(false); }}
+                  className="text-slate-400 hover:text-white text-sm font-medium text-left bg-transparent border-0 cursor-pointer p-0 transition-colors">
+                  {l}
+                </button>
+              ))}
+            </div>
+          )}
+        </header>
+      );
+    };
+
+    const Hero = () => {
+      const typed = useTyper([
+        'CS Student @ ADMU',
+        'Aspiring Software Engineer',
+        'Enterprise Systems Enthusiast',
+        'Web Developer',
+      ]);
+      return (
+        <section id="home" className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-16 overflow-hidden">
+          <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+            <div style={{ position:'absolute', top:'42%', left:'50%', transform:'translate(-50%,-50%)', width:800, height:800, background:'radial-gradient(circle, rgba(59,130,246,0.052) 0%, transparent 62%)' }}></div>
+          </div>
+          <p className="au d1 text-[11px] font-bold tracking-[0.24em] uppercase text-blue-500 mb-6">Hello, World —</p>
+          <h1 className="au d2 font-extrabold text-white leading-none mb-4"
+            style={{ fontSize: 'clamp(2.8rem, 8vw, 5.5rem)', letterSpacing: '-0.038em' }}>
+            Hi, I'm{' '}
+            <span className="text-blue-500" style={{ textShadow: '0 0 64px rgba(59,130,246,0.35)' }}>Calil.</span>
+          </h1>
+          <div className="au d3 text-lg sm:text-xl text-slate-400 font-medium mb-4 h-8 flex items-center justify-center gap-1">
+            <span>{typed}</span>
+            <span className="cursor text-blue-400 ml-0.5">|</span>
+          </div>
+          <p className="au d4 text-slate-500 text-[15px] max-w-[380px] leading-relaxed mb-10">
+            Building clean, scalable, and user-friendly software — from web apps to enterprise systems.
+          </p>
+          <div className="au d5 flex flex-wrap items-center justify-center gap-3">
+            <button onClick={() => scrollTo('projects')}
+              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all duration-200 hover:-translate-y-0.5 border-0 cursor-pointer"
+              onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 32px -4px rgba(59,130,246,0.45)'}
+              onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
+              View My Work
+            </button>
+            <button
+              onClick={() => alert('Add your resume PDF link here!')}
+              className="text-white font-semibold text-sm px-6 py-3 rounded-xl border border-white/[0.14] hover:border-blue-400/40 hover:bg-white/[0.04] transition-all duration-200 hover:-translate-y-0.5 flex items-center gap-2 bg-transparent cursor-pointer">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download Résumé
+            </button>
+          </div>
+          <button onClick={() => scrollTo('about')}
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-slate-700 hover:text-slate-500 transition-colors bg-transparent border-0 cursor-pointer">
+            <span className="text-[10px] font-bold tracking-[0.2em] uppercase">Scroll</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </button>
+        </section>
+      );
+    };
+
+    const About = () => (
+      <section id="about" className="py-28 px-6">
+        <div className="max-w-5xl mx-auto">
+          <Reveal><SH label="Who I Am" title="About Me" /></Reveal>
+          <div className="grid md:grid-cols-5 gap-10 md:gap-14 items-start">
+            <Reveal delay={80} className="md:col-span-3">
+              <p className="text-slate-300 leading-[1.85] mb-5 text-[15px]">
+                I'm a 3rd year Computer Science student at{' '}
+                <span className="text-white font-semibold">Ateneo de Manila University</span>,
+                specializing in Enterprise Systems. I'm excited about expanding my skills
+                in software engineering, databases, and web frameworks — constantly pushing
+                myself to learn new technologies and understand how complex systems are built.
+              </p>
+              <p className="text-slate-400 leading-[1.85] text-[15px]">
+                I look forward to working in teams to build projects that solve meaningful
+                technical problems and benefit society. Whether it's full-stack web development,
+                intuitive UI design, or complex backend logic — I'm eager to contribute,
+                collaborate, and grow.
+              </p>
+            </Reveal>
+            <Reveal delay={150} className="md:col-span-2">
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  ['University', 'Ateneo de Manila'],
+                  ['Year', '3rd Year'],
+                  ['Specialization', 'Enterprise Systems'],
+                  ['Degree', 'B.S. Computer Science'],
+                  ['Location', 'Philippines'],
+                  ['Status', 'Open to Work'],
+                ].map(([label, value]) => (
+                  <div key={label} className="bg-slate-900/60 border border-white/[0.06] rounded-xl p-4">
+                    <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest mb-1.5">{label}</p>
+                    <p className="text-white text-sm font-medium">{value}</p>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+    );
+
+    const Skills = () => (
+      <section id="skills" className="py-28 px-6" style={{ background: 'rgba(15,23,42,0.28)' }}>
+        <div className="max-w-5xl mx-auto">
+          <Reveal><SH label="What I Know" title="Skills" /></Reveal>
+          <div className="grid sm:grid-cols-2 gap-5">
+            {Object.entries(SKILLS).map(([cat, items], i) => (
+              <Reveal key={cat} delay={i * 80}>
+                <div className="bg-slate-900/50 border border-white/[0.06] rounded-2xl p-6">
+                  <h3 className="text-white text-[11px] font-bold uppercase tracking-[0.16em] mb-4">{cat}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {items.map(sk => <span key={sk} className="pill">{sk}</span>)}
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+
+    const Card = ({ p, delay }) => (
+      <Reveal delay={delay} className="flex flex-col">
+        <div className="p-card flex-1 flex flex-col gap-4 p-6 rounded-2xl" style={{ background: 'rgba(13,20,38,0.7)' }}>
+          <div className="flex items-start justify-between">
+            <svg className="folder-ic" width="26" height="26" viewBox="0 0 24 24" fill="none"
+              stroke="#3d5070" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            <a href={p.github} target="_blank" rel="noopener noreferrer" className="gh-link">
+              <GHIcon s={17} />
+            </a>
+          </div>
+          <div className="flex-1">
+            <h3 className="text-white font-semibold mb-2 text-[15px]" style={{ letterSpacing: '-0.01em' }}>{p.title}</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">{p.desc}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {p.stack.map(t => <span key={t} className="s-tag">{t}</span>)}
+          </div>
+        </div>
+      </Reveal>
+    );
+
+    const Projects = () => (
+      <section id="projects" className="py-28 px-6">
+        <div className="max-w-5xl mx-auto">
+          <Reveal><SH label="What I've Built" title="Projects" /></Reveal>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {PROJECTS.map((p, i) => <Card key={p.title} p={p} delay={i * 60} />)}
+          </div>
+          <Reveal delay={220}>
+            <div className="mt-10 text-center">
+              <a href="https://github.com/calilaceron" target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200"
+                style={{ textDecoration: 'none' }}>
+                View all on GitHub
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                  <polyline points="15 3 21 3 21 9"/>
+                  <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+              </a>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+    );
+
+    const Contact = () => (
+      <section id="contact" className="py-28 px-6" style={{ background: 'rgba(15,23,42,0.28)' }}>
+        <div className="max-w-5xl mx-auto">
+          <Reveal><SH label="Get In Touch" title="Let's Connect." /></Reveal>
+          <div className="grid md:grid-cols-2 gap-14 items-center">
+            <Reveal delay={80}>
+              <p className="text-slate-300 leading-[1.85] mb-8 text-[15px]">
+                I'm currently open to internship and collaboration opportunities.
+                Whether you have a project in mind, a question, or just want to say
+                hello — feel free to reach out. I'll get back to you soon!
+              </p>
+              <a href="mailto:calilaceron11@gmail.com" className="email-lnk text-[15px]">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <path d="m2 7 10 7 10-7"/>
+                </svg>
+                calilaceron11@gmail.com
+              </a>
+            </Reveal>
+            <Reveal delay={150}>
+              <div className="flex gap-3 md:justify-end">
+                <a href="https://github.com/calilaceron" target="_blank" rel="noopener noreferrer" className="soc-btn">
+                  <GHIcon s={17} /> GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/calilaceron" target="_blank" rel="noopener noreferrer" className="soc-btn">
+                  <LIIcon s={17} /> LinkedIn
+                </a>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+    );
+
+    const Footer = () => (
+      <footer className="border-t border-white/[0.05] py-8 px-6">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p className="text-slate-700 text-xs">© 2026 Calil Aceron. All rights reserved.</p>
+          <p className="text-slate-800 text-xs">Built with React & Tailwind CSS</p>
+        </div>
+      </footer>
+    );
+
+    const App = () => (
+      <div className="min-h-screen bg-[#0a0a0a]">
+        <Nav />
+        <main>
+          <Hero />
+          <About />
+          <Skills />
+          <Projects />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
+    );
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  {% endverbatim %}</script>
+</body>
+</html>
