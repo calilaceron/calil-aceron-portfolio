@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-qnr2^)-y70p8g%ic!m=405w#p*r(sm@2i0t+5(%&+eca&lo%34
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://calil-aceron-portfolio-production.up.railway.app'
+]
 
 
 # Application definition
