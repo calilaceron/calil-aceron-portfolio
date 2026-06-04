@@ -1,5 +1,6 @@
 *, *::before, *::after { font-family: 'Inter', sans-serif; text-wrap: pretty; }
-html, body { margin: 0; padding: 0; background: #0a0a0a; }
+html { margin: 0; padding: 0; background: #0a0a0a; scroll-behavior: smooth; scroll-padding-top: 80px; }
+body { margin: 0; padding: 0; background: #0a0a0a; }
 
 @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 @keyframes blink  { 0%,100% { opacity: 1; } 50% { opacity: 0; } }

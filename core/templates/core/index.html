@@ -20,45 +20,6 @@
   <script type="text/babel">{% verbatim %}
     const { useState, useEffect, useRef } = React;
 
-    const SKILLS = {
-      Languages:             ['Python', 'Java', 'JavaScript', 'HTML / CSS', 'SQL'],
-      'Frameworks & Tools':  ['Django', 'React', 'Git', 'GitHub', 'Railway', 'Figma', 'Canva'],
-      Concepts:              ['OOP', 'REST APIs', 'Relational Databases', 'Design Patterns', 'UI/UX Design'],
-      'Soft Skills':         ['Teamwork', 'Collaboration', 'Critical Thinking', 'Communication', 'Problem-Solving', 'Adaptability'],
-    };
-
-    const PROJECTS = [
-      {
-        title:  'Learn2Dev Route-finder',
-        desc:   'Collaborated in a team to learn foundational web development and build an in-campus route-finder for Ateneo de Manila University.',
-        stack:  ['React', 'JavaScript', 'HTML', 'CSS'],
-        github: 'https://github.com/calilaceron',
-      },
-      {
-        title:  'CommonGrounds',
-        desc:   'Multi-app Django website with user authentication, role-based access controls, and session-based guest purchasing — focused on the merchandise store and auth pages.',
-        stack:  ['Django', 'Python', 'SQL'],
-        github: 'https://github.com/calilaceron',
-      },
-      {
-        title:  'Recipebook',
-        desc:   'A clean, functional recipe management web app built with Django — allowing users to create, browse, and manage their personal recipe collections.',
-        stack:  ['Django', 'Python', 'SQL'],
-        github: 'https://github.com/calilaceron',
-      },
-      {
-        title:  'Academic Climb',
-        desc:   'A 2D two-player Java multiplayer platformer with real-time networking, dynamic in-game elements, and graphics rendered using Java Swing.',
-        stack:  ['Java', 'Java Swing', 'Networking'],
-        github: 'https://github.com/calilaceron',
-      },
-      {
-        title:  'Basic Landing Page',
-        desc:   'A clean, responsive landing page dashboard built with semantic HTML and CSS Flexbox, focused on layout fundamentals and visual clarity.',
-        stack:  ['HTML', 'CSS', 'Flexbox'],
-        github: 'https://github.com/calilaceron',
-      },
-    ];
 
     const GHIcon = ({ s = 20 }) => (
       <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -69,6 +30,23 @@
     const LIIcon = ({ s = 20 }) => (
       <svg width={s} height={s} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+    );
+
+    const BookOpenIcon = ({ s = 20 }) => (
+      <svg width={s} height={s} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+      </svg>
+    );
+
+    const ExtLinkIcon = ({ s = 14 }) => (
+      <svg width={s} height={s} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+        <polyline points="15 3 21 3 21 9"/>
+        <line x1="10" y1="14" x2="21" y2="3"/>
       </svg>
     );
 
@@ -126,7 +104,7 @@
         window.addEventListener('scroll', fn, { passive: true });
         return () => window.removeEventListener('scroll', fn);
       }, []);
-      const links = ['About', 'Skills', 'Projects', 'Contact'];
+      const links = ['About', 'Skills', 'Projects', 'Publications', 'Contact'];
       return (
         <header className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${sc ? 'bg-[#0a0a0a]/82 backdrop-blur-2xl border-b border-white/[0.06]' : ''}`}>
           <div className="max-w-5xl mx-auto px-6 flex items-center justify-between h-[68px]">
@@ -138,10 +116,10 @@
             </button>
             <nav className="hidden md:flex items-center gap-8">
               {links.map(l => (
-                <button key={l} onClick={() => scrollTo(l.toLowerCase())}
-                  className="text-sm text-slate-400 hover:text-white font-medium transition-colors duration-200 bg-transparent border-0 cursor-pointer p-0">
+                <a key={l} href={`#${l.toLowerCase()}`}
+                  className="text-sm text-slate-400 hover:text-white font-medium transition-colors duration-200 no-underline" style={{ textDecoration: 'none' }}>
                   {l}
-                </button>
+                </a>
               ))}
             </nav>
             <button
@@ -156,10 +134,10 @@
             <div className="md:hidden border-t border-white/[0.05] px-6 py-5 flex flex-col gap-5"
               style={{ background: 'rgba(10,14,26,0.97)', backdropFilter: 'blur(24px)' }}>
               {links.map(l => (
-                <button key={l} onClick={() => { scrollTo(l.toLowerCase()); setOpen(false); }}
-                  className="text-slate-400 hover:text-white text-sm font-medium text-left bg-transparent border-0 cursor-pointer p-0 transition-colors">
+                <a key={l} href={`#${l.toLowerCase()}`} onClick={() => setOpen(false)}
+                  className="text-slate-400 hover:text-white text-sm font-medium transition-colors" style={{ textDecoration: 'none' }}>
                   {l}
-                </button>
+                </a>
               ))}
             </div>
           )}
@@ -171,7 +149,7 @@
       const typed = useTyper([
         'CS Student @ ADMU',
         'Aspiring Software Engineer',
-        'Enterprise Systems Enthusiast',
+        'Enterprise Systems Specialization',
         'Web Developer',
       ]);
       return (
@@ -179,10 +157,10 @@
           <div className="pointer-events-none absolute inset-0" aria-hidden="true">
             <div style={{ position:'absolute', top:'42%', left:'50%', transform:'translate(-50%,-50%)', width:800, height:800, background:'radial-gradient(circle, rgba(59,130,246,0.052) 0%, transparent 62%)' }}></div>
           </div>
-          <p className="au d1 text-[11px] font-bold tracking-[0.24em] uppercase text-blue-500 mb-6">Hello, World —</p>
+          <p className="au d1 text-[11px] font-bold tracking-[0.24em] uppercase text-blue-500 mb-6">Hello, Kumusta, Bonjour</p>
           <h1 className="au d2 font-extrabold text-white leading-none mb-4"
             style={{ fontSize: 'clamp(2.8rem, 8vw, 5.5rem)', letterSpacing: '-0.038em' }}>
-            Hi, I'm{' '}
+            I'm{' '}
             <span className="text-blue-500" style={{ textShadow: '0 0 64px rgba(59,130,246,0.35)' }}>Calil.</span>
           </h1>
           <div className="au d3 text-lg sm:text-xl text-slate-400 font-medium mb-4 h-8 flex items-center justify-center gap-1">
@@ -190,25 +168,16 @@
             <span className="cursor text-blue-400 ml-0.5">|</span>
           </div>
           <p className="au d4 text-slate-500 text-[15px] max-w-[380px] leading-relaxed mb-10">
-            Building clean, scalable, and user-friendly software — from web apps to enterprise systems.
+            Understanding, learning, and growing as a software engineer.
           </p>
           <div className="au d5 flex flex-wrap items-center justify-center gap-3">
-            <button onClick={() => scrollTo('projects')}
-              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all duration-200 hover:-translate-y-0.5 border-0 cursor-pointer"
+            <a href="https://github.com/calilaceron" target="_blank" rel="noopener noreferrer"
+              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all duration-200 hover:-translate-y-0.5 cursor-pointer inline-block"
+              style={{ textDecoration: 'none' }}
               onMouseEnter={e => e.currentTarget.style.boxShadow = '0 8px 32px -4px rgba(59,130,246,0.45)'}
               onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}>
               View My Work
-            </button>
-            <button
-              onClick={() => alert('Add your resume PDF link here!')}
-              className="text-white font-semibold text-sm px-6 py-3 rounded-xl border border-white/[0.14] hover:border-blue-400/40 hover:bg-white/[0.04] transition-all duration-200 hover:-translate-y-0.5 flex items-center gap-2 bg-transparent cursor-pointer">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              Download Résumé
-            </button>
+            </a>
           </div>
           <button onClick={() => scrollTo('about')}
             className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 text-slate-700 hover:text-slate-500 transition-colors bg-transparent border-0 cursor-pointer">
@@ -249,9 +218,9 @@
                   ['Specialization', 'Enterprise Systems'],
                   ['Degree', 'B.S. Computer Science'],
                   ['Location', 'Philippines'],
-                  ['Status', 'Open to Work'],
+                  ['Status', 'Studying'],
                 ].map(([label, value]) => (
-                  <div key={label} className="bg-slate-900/60 border border-white/[0.06] rounded-xl p-4">
+                  <div key={label} className="bg-slate-900/60 border border-white/[0.06] rounded-xl p-4 transition-all duration-300 hover:border-blue-500/[0.28] hover:shadow-[0_0_22px_-4px_rgba(59,130,246,0.22)] hover:-translate-y-0.5">
                     <p className="text-slate-600 text-[10px] font-bold uppercase tracking-widest mb-1.5">{label}</p>
                     <p className="text-white text-sm font-medium">{value}</p>
                   </div>
@@ -263,25 +232,28 @@
       </section>
     );
 
-    const Skills = () => (
-      <section id="skills" className="py-28 px-6" style={{ background: 'rgba(15,23,42,0.28)' }}>
-        <div className="max-w-5xl mx-auto">
-          <Reveal><SH label="What I Know" title="Skills" /></Reveal>
-          <div className="grid sm:grid-cols-2 gap-5">
-            {Object.entries(SKILLS).map(([cat, items], i) => (
-              <Reveal key={cat} delay={i * 80}>
-                <div className="bg-slate-900/50 border border-white/[0.06] rounded-2xl p-6">
-                  <h3 className="text-white text-[11px] font-bold uppercase tracking-[0.16em] mb-4">{cat}</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {items.map(sk => <span key={sk} className="pill">{sk}</span>)}
+    const Skills = ({ skills }) => {
+      if (!skills) return null;
+      return (
+        <section id="skills" className="py-28 px-6" style={{ background: 'rgba(15,23,42,0.28)' }}>
+          <div className="max-w-5xl mx-auto">
+            <Reveal><SH label="What I Know" title="Skills" /></Reveal>
+            <div className="grid sm:grid-cols-2 gap-5">
+              {Object.entries(skills).map(([cat, items], i) => (
+                <Reveal key={cat} delay={i * 80}>
+                  <div className="bg-slate-900/50 border border-white/[0.06] rounded-2xl p-6">
+                    <h3 className="text-white text-[11px] font-bold uppercase tracking-[0.16em] mb-4">{cat}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {items.map(sk => <span key={sk} className="pill">{sk}</span>)}
+                    </div>
                   </div>
-                </div>
-              </Reveal>
-            ))}
+                </Reveal>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
-    );
+        </section>
+      );
+    };
 
     const Card = ({ p, delay }) => (
       <Reveal delay={delay} className="flex flex-col">
@@ -291,27 +263,111 @@
               stroke="#3d5070" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
             </svg>
-            <a href={p.github} target="_blank" rel="noopener noreferrer" className="gh-link">
-              <GHIcon s={17} />
-            </a>
+            <div className="flex items-center gap-3">
+              {p.github_url && (
+                <a href={p.github_url} target="_blank" rel="noopener noreferrer" className="gh-link">
+                  <GHIcon s={17} />
+                </a>
+              )}
+              {p.live_url && (
+                <a href={p.live_url} target="_blank" rel="noopener noreferrer" className="gh-link" title="Live Demo">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                  </svg>
+                </a>
+              )}
+            </div>
           </div>
           <div className="flex-1">
             <h3 className="text-white font-semibold mb-2 text-[15px]" style={{ letterSpacing: '-0.01em' }}>{p.title}</h3>
-            <p className="text-slate-400 text-sm leading-relaxed">{p.desc}</p>
+            <p className="text-slate-400 text-sm leading-relaxed">{p.description}</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            {p.stack.map(t => <span key={t} className="s-tag">{t}</span>)}
+            {(p.tech_stack || []).map(t => <span key={t} className="s-tag">{t}</span>)}
           </div>
         </div>
       </Reveal>
     );
 
-    const Projects = () => (
+    const Publications = ({ publications }) => {
+      if (!publications || publications.length === 0) return null;
+      return (
+        <section id="publications" className="py-28 px-6" style={{ background: 'rgba(15,23,42,0.28)' }}>
+          <div className="max-w-5xl mx-auto">
+            <Reveal><SH label="Research" title="Publications" /></Reveal>
+            <div className="flex flex-col gap-5">
+              {publications.map((pub, i) => (
+                <Reveal key={pub.title} delay={i * 80}>
+                  <div className="p-card flex flex-col gap-5 p-7 rounded-2xl" style={{ background: 'rgba(13,20,38,0.7)' }}>
+
+                    <div className="flex items-start justify-between gap-3 flex-wrap">
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-blue-400/60 shrink-0"><BookOpenIcon s={20} /></span>
+                        <span className="text-[11px] font-bold tracking-[0.13em] uppercase text-blue-400 bg-blue-500/[0.1] border border-blue-500/[0.2] px-2.5 py-1 rounded-full leading-tight">
+                          {pub.role}
+                        </span>
+                      </div>
+                      <span className="text-slate-500 text-xs font-semibold tracking-wide shrink-0">{pub.year}</span>
+                    </div>
+
+                    <div>
+                      <h3 className="text-white font-semibold text-[15px] leading-snug mb-1.5" style={{ letterSpacing: '-0.01em' }}>
+                        {pub.title}
+                      </h3>
+                      <p className="text-slate-400 text-sm mb-3">{pub.journal}</p>
+                      {pub.metrics && (
+                        <div className="flex flex-wrap gap-2">
+                          {pub.metrics.split('|').map(m => (
+                            <span key={m} className="text-[11px] font-medium text-slate-300 bg-slate-800/80 border border-white/[0.07] px-2.5 py-1 rounded-md">
+                              {m.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {pub.description && pub.description.length > 0 && (
+                      <ul className="flex flex-col gap-2.5 border-t border-white/[0.05] pt-4">
+                        {pub.description.map((point, j) => (
+                          <li key={j} className="flex items-start gap-2.5 text-sm text-slate-400 leading-relaxed">
+                            <svg className="shrink-0 mt-[7px]" width="5" height="5" viewBox="0 0 6 6" fill="rgba(59,130,246,0.7)">
+                              <circle cx="3" cy="3" r="3"/>
+                            </svg>
+                            {point}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {pub.link && (
+                      <div className="pt-2 border-t border-white/[0.05] flex justify-end">
+                        <a href={pub.link} target="_blank" rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                          style={{ textDecoration: 'none' }}>
+                          View Publication <ExtLinkIcon s={13} />
+                        </a>
+                      </div>
+                    )}
+
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    };
+
+    const Projects = ({ projects }) => {
+      if (!projects) return null;
+      return (
       <section id="projects" className="py-28 px-6">
         <div className="max-w-5xl mx-auto">
           <Reveal><SH label="What I've Built" title="Projects" /></Reveal>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {PROJECTS.map((p, i) => <Card key={p.title} p={p} delay={i * 60} />)}
+            {projects.map((p, i) => <Card key={p.title} p={p} delay={i * 60} />)}
           </div>
           <Reveal delay={220}>
             <div className="mt-10 text-center">
@@ -329,7 +385,8 @@
           </Reveal>
         </div>
       </section>
-    );
+      );
+    };
 
     const Contact = () => (
       <section id="contact" className="py-28 px-6" style={{ background: 'rgba(15,23,42,0.28)' }}>
@@ -358,12 +415,60 @@
                 <a href="https://www.linkedin.com/in/calilaceron" target="_blank" rel="noopener noreferrer" className="soc-btn">
                   <LIIcon s={17} /> LinkedIn
                 </a>
+                <button onClick={() => alert('Resume is issued upon request. Email me at calilaceron11@gmail.com')} className="soc-btn">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                  </svg>
+                  Resume
+                </button>
               </div>
             </Reveal>
           </div>
         </div>
       </section>
     );
+
+    const ScrollTop = () => {
+      const [visible, setVisible] = useState(false);
+      useEffect(() => {
+        const fn = () => setVisible(window.scrollY > 300);
+        window.addEventListener('scroll', fn, { passive: true });
+        return () => window.removeEventListener('scroll', fn);
+      }, []);
+      if (!visible) return null;
+      return (
+        <a
+          href="#home"
+          aria-label="Back to top"
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            right: '24px',
+            zIndex: 9999,
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            background: 'rgba(15,23,42,0.9)',
+            border: '1px solid rgba(255,255,255,0.12)',
+            color: '#94a3b8',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backdropFilter: 'blur(8px)',
+            textDecoration: 'none',
+            transition: 'color 0.2s, border-color 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.color = '#60a5fa'; e.currentTarget.style.borderColor = 'rgba(59,130,246,0.4)'; }}
+          onMouseLeave={e => { e.currentTarget.style.color = '#94a3b8'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.12)'; }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <polyline points="18 15 12 9 6 15"/>
+          </svg>
+        </a>
+      );
+    };
 
     const Footer = () => (
       <footer className="border-t border-white/[0.05] py-8 px-6">
@@ -374,19 +479,33 @@
       </footer>
     );
 
-    const App = () => (
-      <div className="min-h-screen bg-[#0a0a0a]">
-        <Nav />
-        <main>
-          <Hero />
-          <About />
-          <Skills />
-          <Projects />
-          <Contact />
-        </main>
-        <Footer />
-      </div>
-    );
+    const App = () => {
+      const [skills, setSkills] = useState(null);
+      const [projects, setProjects] = useState(null);
+      const [publications, setPublications] = useState(null);
+
+      useEffect(() => {
+        fetch('/api/skills/').then(r => r.json()).then(setSkills);
+        fetch('/api/projects/').then(r => r.json()).then(setProjects);
+        fetch('/api/publications/').then(r => r.json()).then(setPublications);
+      }, []);
+
+      return (
+        <div className="min-h-screen bg-[#0a0a0a]">
+          <Nav />
+          <main>
+            <Hero />
+            <About />
+            <Skills skills={skills} />
+            <Projects projects={projects} />
+            <Publications publications={publications} />
+            <Contact />
+          </main>
+          <Footer />
+          <ScrollTop />
+        </div>
+      );
+    };
 
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   {% endverbatim %}</script>
