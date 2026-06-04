@@ -1,0 +1,56 @@
+*, *::before, *::after { font-family: 'Inter', sans-serif; text-wrap: pretty; }
+html, body { margin: 0; padding: 0; background: #0a0a0a; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+@keyframes blink  { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+.au  { animation: fadeUp 0.7s cubic-bezier(0.16,1,0.3,1) both; }
+.d1  { animation-delay: 0.08s; }
+.d2  { animation-delay: 0.2s; }
+.d3  { animation-delay: 0.33s; }
+.d4  { animation-delay: 0.46s; }
+.d5  { animation-delay: 0.59s; }
+.cursor { animation: blink 1s step-end infinite; }
+
+.reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.in { opacity: 1; transform: none; }
+
+.p-card {
+  border: 1px solid rgba(255,255,255,0.05);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.p-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 60px -16px rgba(59,130,246,0.22);
+  border-color: rgba(59,130,246,0.32);
+}
+.folder-ic { transition: stroke 0.3s ease; }
+.p-card:hover .folder-ic { stroke: #3b82f6; }
+.gh-link { color: #475569; text-decoration: none; display: flex; transition: color 0.2s; }
+.gh-link:hover { color: #60a5fa; }
+
+.pill {
+  font-size: 12px; font-weight: 500; padding: 6px 13px; border-radius: 9999px;
+  color: #93c5fd; background: rgba(30,58,138,0.32); border: 1px solid rgba(59,130,246,0.18);
+  transition: all 0.18s; cursor: default; user-select: none; line-height: 1;
+}
+.pill:hover { color: #bfdbfe; background: rgba(37,99,235,0.28); border-color: rgba(59,130,246,0.52); }
+
+.s-tag {
+  color: #94a3b8; font-size: 11px; font-weight: 500;
+  padding: 4px 10px; border-radius: 6px; background: rgba(30,41,59,0.95);
+}
+
+.soc-btn {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500;
+  padding: 11px 18px; border-radius: 12px; text-decoration: none; transition: all 0.2s;
+  color: #64748b; background: rgba(15,23,42,0.6); border: 1px solid rgba(255,255,255,0.06);
+}
+.soc-btn:hover { color: white; background: rgba(30,41,59,0.95); border-color: rgba(255,255,255,0.13); transform: translateY(-2px); }
+
+a.email-lnk { color: #60a5fa; text-decoration: none; display: inline-flex; align-items: center; gap: 11px; font-weight: 500; transition: color 0.2s; }
+a.email-lnk:hover { color: #93c5fd; text-decoration: underline; text-underline-offset: 4px; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: #0a0a0a; }
+::-webkit-scrollbar-thumb { background: #1d4ed8; border-radius: 4px; }
