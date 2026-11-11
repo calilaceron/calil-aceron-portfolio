@@ -9,7 +9,7 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
-_csrf = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
+_csrf = os.environ.get('CSRF_TRUSTED_ORIGINS', 'https://calil-aceron.onrender.com,https://*.onrender.com')
 CSRF_TRUSTED_ORIGINS = [o.strip() for o in _csrf.split(',') if o.strip()]
 
 

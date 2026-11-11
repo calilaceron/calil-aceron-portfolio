@@ -30,7 +30,7 @@ PROJECTS = [
         "description": "Personal developer portfolio built with Django, dynamic React frontend, Tailwind CSS, and content managed through Django Admin.",
         "tech_stack": ["Django", "Python", "React", "PostgreSQL", "Tailwind CSS"],
         "github_url": "https://github.com/calilaceron/calil-aceron-portfolio",
-        "live_url": "https://calil-aceron.up.railway.app/",
+        "live_url": "https://calil-aceron.onrender.com/",
         "order": 4,
     },
     {

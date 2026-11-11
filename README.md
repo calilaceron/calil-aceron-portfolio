@@ -15,7 +15,7 @@ python manage.py runserver
 
 Site runs at `http://127.0.0.1:8000` locally, admin at `/admin`.
 
-Deployed at https://calil-aceron.up.railway.app
+Deployed at https://calil-aceron.onrender.com
 
 ## Environment variables
 
