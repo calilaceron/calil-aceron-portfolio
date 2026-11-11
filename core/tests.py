@@ -30,6 +30,10 @@ class OldOrderingCollisionTests(TestCase):
     that the admin mixin prevents during normal use.
     """
 
+    def setUp(self):
+        Project.objects.all().delete()
+        Skill.objects.all().delete()
+
     def test_two_projects_at_order_zero_sort_alphabetically(self):
         make_project('Zebra Project', order=0)
         make_project('Alpha Project', order=0)
@@ -75,6 +79,7 @@ class ProjectAutoAppendTests(TestCase):
     """
 
     def setUp(self):
+        Project.objects.all().delete()
         self.site = AdminSite()
         self.admin = ProjectAdmin(Project, self.site)
 
@@ -121,6 +126,8 @@ class ProjectAutoAppendTests(TestCase):
 class SkillAutoAppendTests(TestCase):
 
     def setUp(self):
+        Project.objects.all().delete()
+        Skill.objects.all().delete()
         self.site = AdminSite()
         self.admin = SkillAdmin(Skill, self.site)
 
@@ -178,6 +185,9 @@ class SkillAutoAppendTests(TestCase):
 
 class ProjectQuerysetOrderingTests(TestCase):
 
+    def setUp(self):
+        Project.objects.all().delete()
+
     def test_projects_ordered_by_order_then_title(self):
         make_project('B', order=2)
         make_project('A', order=1)
@@ -208,6 +218,9 @@ class ProjectQuerysetOrderingTests(TestCase):
 
 class SkillQuerysetOrderingTests(TestCase):
 
+    def setUp(self):
+        Skill.objects.all().delete()
+
     def test_skills_ordered_by_category_then_order_then_name(self):
         make_skill('OOP', Skill.CONCEPTS, order=1)
         make_skill('Python', Skill.LANGUAGES, order=1)
@@ -234,6 +247,7 @@ class SkillQuerysetOrderingTests(TestCase):
 class AdminMixinConfigurationTests(TestCase):
 
     def setUp(self):
+        Project.objects.all().delete()
         self.site = AdminSite()
 
     def test_project_admin_inherits_sortable_mixin(self):
